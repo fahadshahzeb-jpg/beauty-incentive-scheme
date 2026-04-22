@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beauty Pro Incentives</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #F0D080;
+    --rose: #E8637A;
+    --cream: #FDF6EC;
+    --deep: #1A0A2E;
+    --deep2: #2D1B4E;
+    --accent: #FF8FAB;
+    --green: #4ECDA4;
+    --blue: #5B9CF6;
+    --orange: #FF7043;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--deep);
+    color: var(--cream);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* ── SLIDES ── */
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+  }
+  .slide.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* ── BACKGROUNDS ── */
+  .bg-intro {
+    background: radial-gradient(ellipse at 30% 50%, #3D1260 0%, var(--deep) 65%),
+                radial-gradient(ellipse at 80% 20%, #1A3A6E 0%, transparent 50%);
+  }
+  .bg-rating    { background: radial-gradient(ellipse at 20% 60%, #3D1260 0%, var(--deep) 70%); }
+  .bg-rebook    { background: radial-gradient(ellipse at 70% 40%, #1A3A6E 0%, var(--deep) 70%); }
+  .bg-share     { background: radial-gradient(ellipse at 50% 30%, #1A4D35 0%, var(--deep) 70%); }
+  .bg-pct       { background: radial-gradient(ellipse at 30% 70%, #4D2A0A 0%, var(--deep) 70%); }
+  .bg-referral  { background: radial-gradient(ellipse at 60% 50%, #1A1A5E 0%, var(--deep) 70%); }
+  .bg-shadow    { background: radial-gradient(ellipse at 40% 40%, #3D2A0A 0%, var(--deep) 70%); }
+  .bg-outro     { background: radial-gradient(ellipse at 50% 50%, #3D1260 0%, var(--deep) 60%); }
+
+  /* ── SPARKLE OVERLAY ── */
+  .sparkle-overlay {
+    position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0;
+  }
+  .sparkle-overlay::before, .sparkle-overlay::after {
+    content: '';
+    position: absolute;
+    width: 2px; height: 2px;
+    border-radius: 50%;
+    background: var(--gold-light);
+    box-shadow:
+      120px 80px 0 var(--gold-light), 340px 200px 0 #fff, 560px 140px 0 var(--accent),
+      80px 300px 0 #fff, 900px 60px 0 var(--gold-light), 1100px 250px 0 var(--accent),
+      700px 400px 0 #fff, 200px 500px 0 var(--gold-light), 450px 450px 0 #fff,
+      1200px 100px 0 var(--accent), 1350px 380px 0 var(--gold-light), 50px 600px 0 #fff,
+      800px 550px 0 var(--accent), 1000px 500px 0 #fff, 300px 650px 0 var(--gold-light);
+    animation: twinkle 4s infinite alternate;
+    opacity: 0.4;
+  }
+  .sparkle-overlay::after {
+    width: 1px; height: 1px;
+    box-shadow:
+      200px 150px 0 #fff, 500px 80px 0 var(--gold-light), 750px 300px 0 #fff,
+      1000px 200px 0 var(--accent), 150px 400px 0 #fff, 600px 500px 0 var(--gold-light),
+      1100px 600px 0 #fff, 350px 700px 0 var(--accent), 900px 700px 0 var(--gold-light);
+    animation: twinkle 6s 2s infinite alternate;
+    opacity: 0.3;
+  }
+  @keyframes twinkle { from { opacity: 0.2; } to { opacity: 0.6; } }
+
+  /* ── TYPOGRAPHY ── */
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    text-align: center;
+  }
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .subtitle {
+    font-size: clamp(0.9rem, 2vw, 1.15rem);
+    opacity: 0.75;
+    text-align: center;
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    max-width: 600px;
+  }
+  .gold { color: var(--gold-light); }
+  .rose { color: var(--accent); }
+
+  /* ── BADGE ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 50px;
+    padding: 6px 18px;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 20px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 20px;
+    padding: 28px 32px;
+    width: 100%;
+    max-width: 700px;
+    backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── FORMULA BOX ── */
+  .formula {
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.35);
+    border-radius: 14px;
+    padding: 18px 24px;
+    text-align: center;
+    font-size: clamp(0.85rem, 1.8vw, 1.05rem);
+    font-weight: 500;
+    color: var(--gold-light);
+    margin: 18px 0;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── TIER ROWS ── */
+  .tier-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .tier-row:last-child { border-bottom: none; }
+  .tier-stars { font-size: 1.1rem; min-width: 90px; }
+  .tier-label { font-size: 0.9rem; opacity: 0.8; flex: 1; }
+  .tier-amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--gold-light);
+  }
+
+  /* ── ICON CIRCLE ── */
+  .icon-circle {
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem;
+    margin: 0 auto 18px;
+    position: relative;
+    z-index: 1;
+  }
+  .ic-gold  { background: radial-gradient(circle, rgba(201,168,76,0.3) 0%, rgba(201,168,76,0.05) 100%); border: 1.5px solid var(--gold); }
+  .ic-rose  { background: radial-gradient(circle, rgba(232,99,122,0.3) 0%, rgba(232,99,122,0.05) 100%); border: 1.5px solid var(--rose); }
+  .ic-green { background: radial-gradient(circle, rgba(78,205,164,0.3) 0%, rgba(78,205,164,0.05) 100%); border: 1.5px solid var(--green); }
+  .ic-blue  { background: radial-gradient(circle, rgba(91,156,246,0.3) 0%, rgba(91,156,246,0.05) 100%); border: 1.5px solid var(--blue); }
+  .ic-orange{ background: radial-gradient(circle, rgba(255,112,67,0.3) 0%, rgba(255,112,67,0.05) 100%); border: 1.5px solid var(--orange); }
+
+  /* ── BIG NUMBER ── */
+  .big-num {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    font-weight: 900;
+    line-height: 1;
+    text-align: center;
+    margin: 10px 0;
+  }
+
+  /* ── EXAMPLE BOX ── */
+  .example-box {
+    background: rgba(91,156,246,0.08);
+    border: 1px solid rgba(91,156,246,0.25);
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-size: 0.88rem;
+    opacity: 0.9;
+    margin-top: 14px;
+  }
+  .example-box strong { color: var(--blue); }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar {
+    position: fixed;
+    bottom: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--accent));
+    transition: width 0.5s ease;
+    z-index: 100;
+  }
+
+  /* ── NAV DOTS ── */
+  .nav-dots {
+    position: fixed;
+    bottom: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 100;
+  }
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .dot.active { background: var(--gold-light); transform: scale(1.3); }
+
+  /* ── CONTROLS ── */
+  .controls {
+    position: fixed;
+    bottom: 50px;
+    right: 28px;
+    display: flex;
+    gap: 10px;
+    z-index: 100;
+  }
+  .btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 50%;
+    width: 44px; height: 44px;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    backdrop-filter: blur(8px);
+  }
+  .btn:hover { background: rgba(201,168,76,0.3); border-color: var(--gold); }
+  .btn.playing { background: rgba(201,168,76,0.25); border-color: var(--gold); }
+
+  /* ── VOICE BTN ── */
+  .voice-btn {
+    position: fixed;
+    top: 20px; right: 24px;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 50px;
+    padding: 8px 16px;
+    color: var(--gold-light);
+    font-size: 0.8rem;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    z-index: 100;
+    display: flex; align-items: center; gap: 6px;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+  .voice-btn:hover { background: rgba(201,168,76,0.3); }
+  .voice-pulse {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--gold-light);
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  /* ── SLIDE NUMBER ── */
+  .slide-num {
+    position: fixed;
+    top: 22px; left: 24px;
+    font-size: 0.75rem;
+    opacity: 0.45;
+    letter-spacing: 0.1em;
+    z-index: 100;
+  }
+
+  /* ── ANIMATIONS ── */
+  .slide.active .anim-up {
+    animation: slideUp 0.7s cubic-bezier(.22,1,.36,1) both;
+  }
+  .slide.active .anim-up.d1 { animation-delay: 0.1s; }
+  .slide.active .anim-up.d2 { animation-delay: 0.25s; }
+  .slide.active .anim-up.d3 { animation-delay: 0.4s; }
+  .slide.active .anim-up.d4 { animation-delay: 0.55s; }
+  .slide.active .anim-up.d5 { animation-delay: 0.7s; }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── OUTRO GRID ── */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 12px;
+    max-width: 720px;
+    width: 100%;
+    margin-top: 24px;
+  }
+  .summary-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 16px;
+    text-align: center;
+    font-size: 0.8rem;
+    opacity: 0.85;
+  }
+  .summary-card .s-icon { font-size: 1.5rem; margin-bottom: 6px; }
+  .summary-card .s-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--gold-light);
+    font-weight: 700;
+  }
+  .summary-card .s-lbl { opacity: 0.65; font-size: 0.72rem; margin-top: 2px; }
+
+  /* ── DEDUCTION HIGHLIGHT ── */
+  .deduct { color: #FF6B6B; }
+  .plus   { color: var(--green); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .summary-grid { grid-template-columns: repeat(2,1fr); }
+    .card { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="sparkle-overlay"></div>
+<div class="progress-bar" id="progress"></div>
+<div class="slide-num" id="slideNum">01 / 08</div>
+
+<button class="voice-btn" id="voiceBtn" onclick="toggleVoice()">
+  <div class="voice-pulse" id="voicePulse"></div>
+  <span id="voiceLabel">AI Voiceover ON</span>
+</button>
+
+<!-- NAV -->
+<div class="nav-dots" id="navDots"></div>
+
+<!-- CONTROLS -->
+<div class="controls">
+  <button class="btn" onclick="prevSlide()">‹</button>
+  <button class="btn" id="playBtn" onclick="toggleAuto()">▶</button>
+  <button class="btn" onclick="nextSlide()">›</button>
+</div>
+
+<!-- ══════════════════════════════════
+     SLIDE 0 — INTRO
+════════════════════════════════════ -->
+<div class="slide bg-intro active" id="s0">
+  <div class="badge anim-up d1">✨ Beauty Pro Program</div>
+  <h1 class="anim-up d2">
+    Your <span class="gold">Earnings</span>,<br>
+    <span class="rose">Amplified.</span>
+  </h1>
+  <p class="subtitle anim-up d3" style="margin-top:18px;">
+    A complete guide to all 6 incentive structures designed to reward your excellence, loyalty, and growth.
+  </p>
+  <div class="anim-up d4" style="margin-top:32px;display:flex;gap:16px;flex-wrap:wrap;justify-content:center;">
+    <div style="background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.3);border-radius:12px;padding:12px 22px;text-align:center;">
+      <div style="font-size:1.6rem;font-family:'Playfair Display',serif;font-weight:700;color:var(--gold-light);">6</div>
+      <div style="font-size:0.75rem;opacity:0.65;margin-top:2px;">Incentives</div>
+    </div>
+    <div style="background:rgba(232,99,122,0.12);border:1px solid rgba(232,99,122,0.3);border-radius:12px;padding:12px 22px;text-align:center;">
+      <div style="font-size:1.6rem;font-family:'Playfair Display',serif;font-weight:700;color:var(--accent);">500+</div>
+      <div style="font-size:0.75rem;opacity:0.65;margin-top:2px;">SAR Potential</div>
+    </div>
+    <div style="background:rgba(78,205,164,0.12);border:1px solid rgba(78,205,164,0.3);border-radius:12px;padding:12px 22px;text-align:center;">
+      <div style="font-size:1.6rem;font-family:'Playfair Display',serif;font-weight:700;color:var(--green);">∞</div>
+      <div style="font-size:0.75rem;opacity:0.65;margin-top:2px;">Growth</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     SLIDE 1 — RATING INCENTIVE
+════════════════════════════════════ -->
+<div class="slide bg-rating" id="s1">
+  <div class="icon-circle ic-gold anim-up d1">⭐</div>
+  <div class="badge anim-up d1">Incentive 1 of 6</div>
+  <h2 class="anim-up d2">Rating Incentive</h2>
+  <p class="subtitle anim-up d2">For new pros — tracked across your <strong style="color:var(--gold-light);">first 150 jobs</strong></p>
+
+  <div class="card anim-up d3" style="margin-top:20px;">
+    <div class="tier-row">
+      <div class="tier-stars">⭐⭐⭐⭐⭐</div>
+      <div class="tier-label">5-star booking</div>
+      <div class="tier-amount plus">+5 SAR</div>
+    </div>
+    <div class="tier-row">
+      <div class="tier-stars" style="font-size:0.9rem;color:#FF6B6B;">0 – 3.5 ★</div>
+      <div class="tier-label">Bad rating deduction</div>
+      <div class="tier-amount deduct">−3 SAR</div>
+    </div>
+
+    <div class="formula anim-up d4">
+      <span class="plus">(5 × 5-star bookings)</span>
+      &nbsp;−&nbsp;
+      <span class="deduct">(3 × Bad ratings)</span>
+      &nbsp;= Rating Incentive
+    </div>
+
+    <div class="example-box anim-up d5">
+      <strong>Example:</strong> 20 five-star bookings &amp; 2 bad ratings<br>
+      = (5 × 20) − (3 × 2) = 100 − 6 = <strong style="color:var(--gold-light);">94 SAR</strong>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     SLIDE 2 — REBOOKING INCENTIVE
+════════════════════════════════════ -->
+<div class="slide bg-rebook" id="s2">
+  <div class="icon-circle ic-blue anim-up d1">🔄</div>
+  <div class="badge anim-up d1">Incentive 2 of 6</div>
+  <h2 class="anim-up d2">Rebooking Incentive</h2>
+  <p class="subtitle anim-up d2">Based on your <strong style="color:var(--blue);">average rating</strong> — the higher you score, the more you earn per rebooking.</p>
+
+  <div class="card anim-up d3" style="margin-top:20px;">
+    <div class="tier-row">
+      <div style="font-size:1.3rem;min-width:90px;">🏆</div>
+      <div class="tier-label">
+        Avg Rating <strong style="color:var(--gold-light);">≥ 4.97</strong>
+      </div>
+      <div class="tier-amount" style="color:var(--gold-light);">18 SAR</div>
+    </div>
+    <div class="tier-row">
+      <div style="font-size:1.3rem;min-width:90px;">🥈</div>
+      <div class="tier-label">
+        Avg Rating <strong style="color:#C0C8FF;">4.90 – 4.96</strong>
+      </div>
+      <div class="tier-amount" style="color:var(--blue);">15 SAR</div>
+    </div>
+    <div class="tier-row">
+      <div style="font-size:1.3rem;min-width:90px;">🥉</div>
+      <div class="tier-label">
+        Avg Rating <strong style="color:#FFB085;">4.85 – 4.89</strong>
+      </div>
+      <div class="tier-amount" style="color:var(--orange);">8 SAR</div>
+    </div>
+
+    <div class="example-box anim-up d4" style="margin-top:14px;border-color:rgba(201,168,76,0.25);background:rgba(201,168,76,0.06);">
+      <strong style="color:var(--gold-light);">Tip:</strong> Every rebooking at a 4.97+ average earns you <strong style="color:var(--gold-light);">18 SAR</strong> — maintain excellence and let rebookings compound!
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     SLIDE 3 — SHARE PROFILE
+════════════════════════════════════ -->
+<div class="slide bg-share" id="s3">
+  <div class="icon-circle ic-green anim-up d1">🔗</div>
+  <div class="badge anim-up d1">Incentive 3 of 6</div>
+  <h2 class="anim-up d2">Share Profile Incentive</h2>
+  <p class="subtitle anim-up d2">Earn every time a new customer books through <strong style="color:var(--green);">your personal profile link.</strong></p>
+
+  <div class="card anim-up d3" style="margin-top:20px;text-align:center;">
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:8px;">Per successful profile share booking</p>
+    <div class="big-num" style="color:var(--green);">50</div>
+    <p style="font-size:1.1rem;color:var(--green);margin-top:4px;font-weight:500;">SAR per booking</p>
+
+    <div style="margin-top:24px;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;">
+      <div style="text-align:center;font-size:0.8rem;opacity:0.7;">
+        <div style="font-size:1.5rem;margin-bottom:4px;">👩‍💼</div>You share your link
+      </div>
+      <div style="font-size:1.4rem;color:var(--green);">→</div>
+      <div style="text-align:center;font-size:0.8rem;opacity:0.7;">
+        <div style="font-size:1.5rem;margin-bottom:4px;">📱</div>Customer clicks &amp; books
+      </div>
+      <div style="font-size:1.4rem;color:var(--green);">→</div>
+      <div style="text-align:center;font-size:0.8rem;color:var(--green);">
+        <div style="font-size:1.5rem;margin-bottom:4px;">💰</div><strong>You earn 50 SAR!</strong>
+      </div>
+    </div>
+
+    <div class="example-box anim-up d4" style="margin-top:18px;border-color:rgba(78,205,164,0.25);background:rgba(78,205,164,0.06);">
+      <strong style="color:var(--green);">Tip:</strong> Share your profile on WhatsApp, Instagram &amp; with friends. Each successful booking = 50 SAR straight to you!
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     SLIDE 4 — PERCENTAGE COMMISSION
+════════════════════════════════════ -->
+<div class="slide bg-pct" id="s4">
+  <div class="icon-circle ic-orange anim-up d1">📈</div>
+  <div class="badge anim-up d1">Incentive 4 of 6</div>
+  <h2 class="anim-up d2">Percentage Commission</h2>
+  <p class="subtitle anim-up d2">Rewarding <strong style="color:var(--orange);">high-performing pros</strong> who exceed 15,000 SAR in total job value.</p>
+
+  <div class="card anim-up d3" style="margin-top:20px;">
+    <div class="formula" style="border-color:rgba(255,112,67,0.35);background:rgba(255,112,67,0.08);color:var(--orange);">
+      3% × (Total Job Value − 15,000 SAR)
+    </div>
+
+    <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:120px;background:rgba(255,255,255,0.05);border-radius:12px;padding:14px;text-align:center;">
+        <div style="font-size:0.72rem;opacity:0.6;margin-bottom:4px;">Threshold</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--orange);">15,000</div>
+        <div style="font-size:0.72rem;opacity:0.6;">SAR</div>
+      </div>
+      <div style="flex:1;min-width:120px;background:rgba(255,255,255,0.05);border-radius:12px;padding:14px;text-align:center;">
+        <div style="font-size:0.72rem;opacity:0.6;margin-bottom:4px;">Commission Rate</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--orange);">3%</div>
+        <div style="font-size:0.72rem;opacity:0.6;">of surplus</div>
+      </div>
+    </div>
+
+    <div class="example-box anim-up d4" style="border-color:rgba(255,112,67,0.25);background:rgba(255,112,67,0.06);">
+      <strong style="color:var(--orange);">Example:</strong> Total job value = 20,000 SAR<br>
+      Surplus = 20,000 − 15,000 = 5,000 SAR<br>
+      Commission = 3% × 5,000 = <strong style="color:var(--gold-light);">150 SAR</strong>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     SLIDE 5 — REFERRAL
+════════════════════════════════════ -->
+<div class="slide bg-referral" id="s5">
+  <div class="icon-circle ic-blue anim-up d1">🤝</div>
+  <div class="badge anim-up d1">Incentive 5 of 6</div>
+  <h2 class="anim-up d2">Referral Incentive</h2>
+  <p class="subtitle anim-up d2">Help us grow our community of beauty professionals — <strong style="color:var(--blue);">and earn big.</strong></p>
+
+  <div class="card anim-up d3" style="margin-top:20px;text-align:center;">
+    <p style="font-size:0.85rem;opacity:0.7;margin-bottom:8px;">One-time reward per successful referral</p>
+    <div class="big-num" style="color:var(--blue);">500</div>
+    <p style="font-size:1.1rem;color:var(--blue);margin-top:4px;font-weight:500;">SAR per referral</p>
+
+    <div style="margin-top:22px;background:rgba(91,156,246,0.08);border:1px solid rgba(91,156,246,0.2);border-radius:12px;padding:16px 20px;font-size:0.86rem;line-height:1.7;">
+      ✅ Referred pro must <strong style="color:var(--blue);">come to KSA</strong><br>
+      ✅ Must <strong style="color:var(--blue);">start actively working</strong> with us<br>
+      ✅ You receive <strong style="color:var(--gold-light);">500 SAR</strong> upon verification
+    </div>
+
+    <div class="example-box anim-up d4" style="border-color:rgba(91,156,246,0.25);background:rgba(91,156,246,0.06);">
+      <strong style="color:var(--blue);">Refer 3 pros → earn 1,500 SAR!</strong> Unlimited referrals with no cap.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     SLIDE 6 — SHADOWING
+════════════════════════════════════ -->
+<div class="slide bg-shadow" id="s6">
+  <div class="icon-circle ic-orange anim-up d1">👩‍🏫</div>
+  <div class="badge anim-up d1">Incentive 6 of 6</div>
+  <h2 class="anim-up d2">Shadowing Incentive</h2>
+  <p class="subtitle anim-up d2">Become a <strong style="color:var(--gold-light);">Mentor</strong> — guide new pros and earn for every mentee who excels.</p>
+
+  <div class="card anim-up d3" style="margin-top:20px;">
+    <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;">
+      <div style="flex:1;min-width:150px;text-align:center;">
+        <div style="font-size:2.5rem;margin-bottom:8px;">👩‍🏫</div>
+        <div style="font-size:0.78rem;opacity:0.65;">Mentor (You)</div>
+      </div>
+      <div style="font-size:2rem;color:var(--gold-light);">+</div>
+      <div style="flex:1;min-width:150px;text-align:center;">
+        <div style="font-size:2.5rem;margin-bottom:8px;">🌟</div>
+        <div style="font-size:0.78rem;opacity:0.65;">Mentee avg ≥ 4.8</div>
+      </div>
+      <div style="font-size:2rem;color:var(--gold-light);">=</div>
+      <div style="flex:1;min-width:150px;text-align:center;">
+        <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--gold-light);">50</div>
+        <div style="font-size:0.78rem;color:var(--gold-light);">SAR per mentee</div>
+      </div>
+    </div>
+
+    <div style="margin-top:18px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:14px 20px;font-size:0.86rem;line-height:1.7;">
+      ✅ Mentee must maintain <strong style="color:var(--gold-light);">average rating above 4.8</strong><br>
+      ✅ Earn <strong style="color:var(--gold-light);">50 SAR per qualifying mentee</strong><br>
+      ✅ The more you mentor, the more you earn
+    </div>
+
+    <div class="example-box anim-up d4" style="border-color:rgba(201,168,76,0.2);background:rgba(201,168,76,0.05);">
+      <strong style="color:var(--gold-light);">Example:</strong> You mentor 5 pros, all above 4.8 avg → earn <strong style="color:var(--gold-light);">250 SAR</strong> in shadowing incentives.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     SLIDE 7 — SUMMARY / OUTRO
+════════════════════════════════════ -->
+<div class="slide bg-outro" id="s7">
+  <div class="badge anim-up d1">Complete Overview</div>
+  <h2 class="anim-up d2">All 6 Incentives at a Glance</h2>
+  <p class="subtitle anim-up d2">Stack them together and <span class="gold">maximise your monthly earnings.</span></p>
+
+  <div class="summary-grid anim-up d3">
+    <div class="summary-card">
+      <div class="s-icon">⭐</div>
+      <div class="s-val">+5 / −3</div>
+      <div class="s-lbl">Rating Incentive (SAR)</div>
+    </div>
+    <div class="summary-card">
+      <div class="s-icon">🔄</div>
+      <div class="s-val">8–18</div>
+      <div class="s-lbl">Rebooking (SAR each)</div>
+    </div>
+    <div class="summary-card">
+      <div class="s-icon">🔗</div>
+      <div class="s-val">50</div>
+      <div class="s-lbl">Share Profile (SAR)</div>
+    </div>
+    <div class="summary-card">
+      <div class="s-icon">📈</div>
+      <div class="s-val">3%</div>
+      <div class="s-lbl">Commission (above 15K)</div>
+    </div>
+    <div class="summary-card">
+      <div class="s-icon">🤝</div>
+      <div class="s-val">500</div>
+      <div class="s-lbl">Referral (SAR each)</div>
+    </div>
+    <div class="summary-card">
+      <div class="s-icon">👩‍🏫</div>
+      <div class="s-val">50</div>
+      <div class="s-lbl">Shadowing (SAR/mentee)</div>
+    </div>
+  </div>
+
+  <p class="anim-up d4" style="margin-top:28px;font-size:0.85rem;opacity:0.55;text-align:center;">
+    Use ‹ › buttons or arrow keys to navigate • Click voice button to toggle narration
+  </p>
+</div>
+
+<script>
+// ── SLIDE DATA ──
+const slides = document.querySelectorAll('.slide');
+const TOTAL = slides.length;
+let current = 0;
+let autoPlay = false;
+let autoTimer = null;
+let voiceOn = true;
+let speaking = false;
+
+// ── VOICEOVER SCRIPTS ──
+const scripts = [
+  "Welcome to the Beauty Pro Incentive Guide! We have designed 6 powerful incentive structures to reward your hard work, your ratings, and your loyalty. Let's explore each one in detail.",
+  "Incentive 1: The Rating Incentive. This is given to new pros and is tracked across your first 150 jobs. For every 5-star booking, you earn plus 5 Saudi Riyals. For every bad rating between 0 and 3.5 stars, 3 Riyals are deducted. The formula is simple: 5 multiplied by the number of 5-star bookings, minus 3 multiplied by the number of bad ratings. For example, 20 five-star bookings and 2 bad ratings gives you 94 Riyals!",
+  "Incentive 2: The Rebooking Incentive. This rewards pros based on their average rating. If your average rating is 4.97 or above, you earn 18 Riyals per rebooking. Between 4.90 and 4.96, you earn 15 Riyals. And between 4.85 and 4.89, you earn 8 Riyals. Maintain your excellence and watch your rebooking earnings grow!",
+  "Incentive 3: Share Profile. This is a simple and powerful incentive. Share your personal profile link with potential customers. Every time a new customer uses your link to book a service, you earn 50 Saudi Riyals per successful booking!",
+  "Incentive 4: Percentage Commission. For our high-performing pros, if your total job value exceeds 15,000 Saudi Riyals, you earn 3 percent of the surplus amount. For example, if your total job value is 20,000 Riyals, you earn 3 percent of 5,000, which equals 150 Riyals as commission!",
+  "Incentive 5: Referral Incentive. Know a talented beauty professional who wants to work with us? Refer them to join our team in KSA. Once they come to Saudi Arabia and start working, you receive a one-time reward of 500 Saudi Riyals. With no cap on referrals, your earning potential is unlimited!",
+  "Incentive 6: The Shadowing Incentive. Experienced pros can become mentors and guide new team members. For every mentee who achieves an average rating above 4.8, you earn 50 Saudi Riyals. The more professionals you mentor to excellence, the more you earn. Leadership truly pays!",
+  "That wraps up all 6 incentive structures. The Rating Incentive, Rebooking Incentive, Share Profile, Percentage Commission, Referral, and Shadowing. Stack them all together to maximise your monthly earnings. Thank you for being a valued Beauty Pro!"
+];
+
+// ── INIT NAV DOTS ──
+const dotsEl = document.getElementById('navDots');
+slides.forEach((_,i) => {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i===0?' active':'');
+  d.onclick = () => goTo(i);
+  dotsEl.appendChild(d);
+});
+
+function updateUI() {
+  slides.forEach((s,i) => s.classList.toggle('active', i===current));
+  document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i===current));
+  document.getElementById('progress').style.width = ((current/(TOTAL-1))*100)+'%';
+  document.getElementById('slideNum').textContent =
+    String(current+1).padStart(2,'0') + ' / ' + String(TOTAL).padStart(2,'0');
+  if (voiceOn) speak(scripts[current]);
+}
+
+function goTo(n) {
+  stopSpeech();
+  current = Math.max(0, Math.min(TOTAL-1, n));
+  updateUI();
+}
+function nextSlide() { goTo(current < TOTAL-1 ? current+1 : current); }
+function prevSlide() { goTo(current > 0 ? current-1 : 0); }
+
+// ── AUTO PLAY ──
+function toggleAuto() {
+  autoPlay = !autoPlay;
+  const btn = document.getElementById('playBtn');
+  btn.textContent = autoPlay ? '⏸' : '▶';
+  btn.classList.toggle('playing', autoPlay);
+  if (autoPlay) scheduleNext();
+  else clearTimeout(autoTimer);
+}
+function scheduleNext() {
+  clearTimeout(autoTimer);
+  autoTimer = setTimeout(() => {
+    if (autoPlay) {
+      if (current < TOTAL-1) { nextSlide(); scheduleNext(); }
+      else toggleAuto();
+    }
+  }, 7000);
+}
+
+// ── VOICE ──
+function speak(text) {
+  if (!window.speechSynthesis || !voiceOn) return;
+  stopSpeech();
+  const u = new SpeechSynthesisUtterance(text);
+  u.rate = 0.92;
+  u.pitch = 1.05;
+  u.volume = 1;
+  // prefer a female English voice
+  const voices = speechSynthesis.getVoices();
+  const preferred = voices.find(v =>
+    /female|samantha|karen|victoria|moira|zira|susan/i.test(v.name)
+  ) || voices.find(v => /en/i.test(v.lang)) || voices[0];
+  if (preferred) u.voice = preferred;
+  u.onstart = () => speaking = true;
+  u.onend = () => speaking = false;
+  speechSynthesis.speak(u);
+}
+
+function stopSpeech() {
+  if (window.speechSynthesis) speechSynthesis.cancel();
+  speaking = false;
+}
+
+function toggleVoice() {
+  voiceOn = !voiceOn;
+  const pulse = document.getElementById('voicePulse');
+  const label = document.getElementById('voiceLabel');
+  if (voiceOn) {
+    pulse.style.animationPlayState = 'running';
+    label.textContent = 'AI Voiceover ON';
+    speak(scripts[current]);
+  } else {
+    pulse.style.animationPlayState = 'paused';
+    pulse.style.opacity = '0.3';
+    label.textContent = 'AI Voiceover OFF';
+    stopSpeech();
+  }
+}
+
+// keyboard nav
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextSlide();
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   prevSlide();
+  if (e.key === ' ') { e.preventDefault(); toggleAuto(); }
+});
+
+// wait for voices to load then speak intro
+if (window.speechSynthesis) {
+  speechSynthesis.onvoiceschanged = () => { if(voiceOn && current===0) speak(scripts[0]); };
+  setTimeout(() => { if(voiceOn) speak(scripts[0]); }, 800);
+}
+
+// init progress
+document.getElementById('progress').style.width = '0%';
+</script>
+</body>
+</html>
